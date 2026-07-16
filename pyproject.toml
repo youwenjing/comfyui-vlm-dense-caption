@@ -1,0 +1,13 @@
+[project]
+name = "comfyui-vlm-dense-caption"
+version = "1.0.0"
+description = "ComfyUI custom node: VLM dense captioning via any OpenAI-compatible API"
+license = { text = "MIT" }
+authors = [
+    { name = "Your Name", email = "your@email.com" }
+]
+keywords = ["comfyui", "vlm", "caption", "vision-language-model", "openai-compatible"]
+readme = "README.md"
+
+[project.urls]
+Repository = "https://github.com/yourname/comfyui-vlm-dense-caption"
