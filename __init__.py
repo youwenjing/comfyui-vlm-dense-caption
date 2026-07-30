@@ -145,6 +145,10 @@ class VLMDenseCaption:
                     "BOOLEAN",
                     {"default": True},
                 ),
+                "verify_ssl": (
+                    "BOOLEAN",
+                    {"default": True},
+                ),
             },
         }
 
@@ -163,6 +167,7 @@ class VLMDenseCaption:
         temperature,
         max_tokens,
         clean_markdown,
+        verify_ssl,
     ):
         if not base_url.strip():
             raise ValueError("base_url 不能为空")
@@ -190,6 +195,7 @@ class VLMDenseCaption:
             messages=messages,
             max_tokens=max_tokens,
             temperature=temperature,
+            verify=verify_ssl,
         )
 
         caption = result["choices"][0]["message"]["content"] or ""
@@ -266,6 +272,10 @@ class VLMDenseCaptionBatch:
                     "BOOLEAN",
                     {"default": True},
                 ),
+                "verify_ssl": (
+                    "BOOLEAN",
+                    {"default": True},
+                ),
                 "separator": (
                     "STRING",
                     {
@@ -291,6 +301,7 @@ class VLMDenseCaptionBatch:
         temperature,
         max_tokens,
         clean_markdown,
+        verify_ssl,
         separator,
     ):
         if not base_url.strip():
@@ -322,6 +333,7 @@ class VLMDenseCaptionBatch:
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
+                verify=verify_ssl,
             )
 
             caption = result["choices"][0]["message"]["content"] or ""
@@ -504,6 +516,7 @@ def _chat_completions(
     max_tokens: int,
     temperature: float,
     timeout: float = 120.0,
+    verify: bool = True,
 ) -> dict:
     """使用 httpx 调用 OpenAI 兼容的 Chat Completions API"""
     url = base_url.strip().rstrip("/")
@@ -522,7 +535,7 @@ def _chat_completions(
         "temperature": temperature,
     }
 
-    response = httpx.post(url, headers=headers, json=body, timeout=timeout)
+    response = httpx.post(url, headers=headers, json=body, timeout=timeout, verify=verify)
     response.raise_for_status()
     return response.json()
 
@@ -635,6 +648,10 @@ class LLMEditInstruction:
                         "tooltip": "JSON 解析失败时的最大重试次数",
                     },
                 ),
+                "verify_ssl": (
+                    "BOOLEAN",
+                    {"default": True},
+                ),
             },
             "optional": {
                 "style_target": (
@@ -663,6 +680,7 @@ class LLMEditInstruction:
         temperature,
         max_tokens,
         max_retries,
+        verify_ssl,
         style_target="",
     ):
         if not source_caption.strip():
@@ -693,6 +711,7 @@ class LLMEditInstruction:
                     messages=messages,
                     max_tokens=max_tokens,
                     temperature=temperature,
+                    verify=verify_ssl,
                 )
                 raw = result["choices"][0]["message"]["content"] or ""
                 raw = raw.strip()
@@ -812,6 +831,10 @@ class LLMEditInstructionBatch:
                         "tooltip": "是否在随机抽取时包含 style_mod（品类变换）",
                     },
                 ),
+                "verify_ssl": (
+                    "BOOLEAN",
+                    {"default": True},
+                ),
             },
         }
 
@@ -832,6 +855,7 @@ class LLMEditInstructionBatch:
         num_edits,
         fixed_edit_types,
         enable_style_mod,
+        verify_ssl,
     ):
         if not source_caption.strip():
             raise ValueError("source_caption 不能为空")
@@ -886,6 +910,7 @@ class LLMEditInstructionBatch:
                         messages=messages,
                         max_tokens=max_tokens,
                         temperature=temperature,
+                        verify=verify_ssl,
                     )
                     raw = result["choices"][0]["message"]["content"] or ""
                     raw = raw.strip()
